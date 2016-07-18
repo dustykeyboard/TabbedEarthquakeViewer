@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello</title>
+
+  <link rel="stylesheet" type="text/css" href="../ext/build/classic/theme-triton/resources/theme-triton-all.css">
+  <script src="../ext/build/ext-all-debug.js"></script>
+
+  <script>
+
+  Ext.define('Earthquakes.view.main.Main', {
+    extend: 'Ext.panel.Panel',
+    xtype: 'main',
+    layout: 'border',
+    title: 'Earthquakes in Iceland',
+    items: [{
+      xtype: 'grid',
+      region: 'center',
+      store: {
+        model: 'Ext.data.Model',
+        fields: [{
+          name: 'timestamp',
+          convert: function(timestamp) {
+            return new Date(timestamp);
+          }
+        }],
+        sorters: ['timestamp'],
+        autoLoad: true,
+        proxy: {
+          type: 'ajax',
+          url: '//apis.is/earthquake/is',
+          reader: {
+            rootProperty: 'results'
+          }
+        }
+      },
+      columns: [{
+        xtype: 'datecolumn',
+        text: 'Time',
+        dataIndex: 'timestamp',
+        format: 'F j, Y \\a\\t H:i',
+        flex: 0.5
+      }, {
+        text: 'Where (V = west, A = east)',
+        dataIndex: 'humanReadableLocation',
+        flex: 1
+      }, {
+        xtype: 'numbercolumn',
+        text: 'Magnitude',
+        dataIndex: 'size',
+        width: 140,
+        align: 'right',
+        format: '0.0'
+      }]
+    }]
+  });
+
+  Ext.application({
+    name: 'Earthquakes',
+    mainView: 'Earthquakes.view.main.Main'
+  });  
+
+  </script>
+
+</head>
+<body></body>
+</html>
